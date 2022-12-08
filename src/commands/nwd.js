@@ -21,10 +21,10 @@ export const nwd = {
   async ls(currentPath) {
     try {
       const dirList = await fs.readdir(currentPath, { withFileTypes: true });
-      const sortedDirList = dirList.sort((a, b) => b.isDirectory() - a.isDirectory());
+      const sortedDirList = dirList.sort((a, b) => a.isFile() - b.isFile());
       let result = [];
       sortedDirList.forEach((el) => {
-        result.push({ Name: el.name, Type: el.isDirectory() ? "directory" : "file" });
+        result.push({ Name: el.name, Type: el.isFile() ? "file" : "directory" });
       });
       console.table(result);
     } catch (err) {

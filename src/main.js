@@ -1,8 +1,10 @@
 import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 import os from "os";
+import { files } from "./commands/files.js";
 import { nwd } from "./commands/nwd.js";
 import { errors } from "./errors.js";
+
 let __currentPath = os.homedir();
 
 const parseAnswer = (answer) => {
@@ -22,6 +24,9 @@ const executeCommand = {
   },
   async ls() {
     await nwd.ls(__currentPath);
+  },
+  async cat(args) {
+    await files.cat(__currentPath, args);
   },
   exit() {
     process.exit(0);
