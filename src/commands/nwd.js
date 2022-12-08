@@ -1,22 +1,20 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { errors } from "../errors.js";
 
 export const nwd = {
   up(changeCurrentPath, currentPath) {
     const resPath = path.resolve(currentPath, "..");
-    // console.log("path: ", resPath);
     changeCurrentPath(resPath);
   },
 
-  async cd(changeCurrentPath, currentPath, destPath) {
+  async cd(changeCurrentPath, currentPath, args) {
+    const destPath = args[0];
     const resPath = path.resolve(currentPath, destPath);
-    // console.log("path: ", resPath);
     try {
       await fs.access(resPath);
       changeCurrentPath(resPath);
-    } catch {
-      errors.operationFailed();
+    } catch (err) {
+      throw err;
     }
   },
 
@@ -30,7 +28,7 @@ export const nwd = {
       });
       console.table(result);
     } catch (err) {
-      errors.operationFailed();
+      throw err;
     }
   },
 };
