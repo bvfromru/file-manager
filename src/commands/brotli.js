@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
 import { createBrotliCompress, createBrotliDecompress } from "node:zlib";
+import { messages } from "../messages.js";
 
 export const brotli = {
   async _implementBrotli(currentPath, srcFile, destFile, action) {
@@ -20,7 +21,7 @@ export const brotli = {
       const srcStream = createReadStream(pathToSrc);
       const destStream = createWriteStream(pathToDest);
       await pipeline(srcStream, brotli, destStream);
-      console.log("Operation successful!");
+      console.log(messages.operationSuccessful);
     } catch (err) {
       throw err;
     }

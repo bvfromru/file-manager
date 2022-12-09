@@ -6,7 +6,7 @@ import { files } from "./commands/files.js";
 import { hash } from "./commands/hash.js";
 import { nwd } from "./commands/nwd.js";
 import { sysInfo } from "./commands/sysInfo.js";
-import { errors } from "./errors.js";
+import { messages } from "./messages.js";
 
 let __currentPath = os.homedir();
 
@@ -30,6 +30,21 @@ const executeCommand = {
   },
   async cat(args) {
     await files.cat(__currentPath, args);
+  },
+  async add(args) {
+    await files.add(__currentPath, args[0]);
+  },
+  async rn(args) {
+    await files.rn(__currentPath, args[0], args[1]);
+  },
+  async cp(args) {
+    await files.cp(__currentPath, args[0], args[1]);
+  },
+  async mv(args) {
+    await files.mv(__currentPath, args[0], args[1]);
+  },
+  async rm(args) {
+    await files.rm(__currentPath, args[0]);
   },
   os(args) {
     sysInfo(args);
@@ -61,10 +76,10 @@ export const startApp = async () => {
       try {
         await executeCommand[command](args);
       } catch {
-        console.log(errors.operationFailed);
+        console.log(messages.operationFailed);
       }
     } else {
-      console.log(errors.invalidInput);
+      console.log(messages.invalidInput);
     }
     // switch (command) {
     //   case "up":

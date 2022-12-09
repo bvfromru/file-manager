@@ -1,5 +1,5 @@
-import { errors } from "./errors.js";
 import { startApp } from "./main.js";
+import { messages } from "./messages.js";
 
 const greeting = (username) => {
   console.log(`Welcome to the File Manager, ${username}!`);
@@ -18,5 +18,5 @@ if (lastArg.includes("--username=")) {
   process.on("exit", () => goodbye(username));
   await startApp();
 } else {
-  console.log(errors.wrongArgs);
+  console.log(messages.wrongArgs);
 }

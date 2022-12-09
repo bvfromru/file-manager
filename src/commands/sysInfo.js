@@ -1,5 +1,5 @@
 import os from "node:os";
-import { errors } from "../errors.js";
+import { messages } from "../messages.js";
 
 export const sysInfo = (args) => {
   const parameter = args[0];
@@ -25,6 +25,6 @@ export const sysInfo = (args) => {
       console.log("This processor architecture is:", process.arch);
       break;
     default:
-      console.log(errors.invalidInput);
+      console.log(messages.invalidInput);
   }
 };
