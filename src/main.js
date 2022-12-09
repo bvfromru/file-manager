@@ -1,6 +1,7 @@
 import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 import os from "os";
+import { brotli } from "./commands/brotli.js";
 import { files } from "./commands/files.js";
 import { hash } from "./commands/hash.js";
 import { nwd } from "./commands/nwd.js";
@@ -35,6 +36,12 @@ const executeCommand = {
   },
   async hash(args) {
     await hash(__currentPath, args);
+  },
+  async compress(args) {
+    await brotli.compress(__currentPath, args[0], args[1]);
+  },
+  async decompress(args) {
+    await brotli.decompress(__currentPath, args[0], args[1]);
   },
   exit() {
     process.exit(0);
