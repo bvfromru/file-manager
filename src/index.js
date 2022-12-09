@@ -18,5 +18,5 @@ if (lastArg.includes("--username=")) {
   process.on("exit", () => goodbye(username));
   await startApp();
 } else {
-  errors.wrongArgs();
+  console.log(errors.wrongArgs);
 }

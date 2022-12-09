@@ -3,6 +3,7 @@ import { createInterface } from "node:readline/promises";
 import os from "os";
 import { files } from "./commands/files.js";
 import { nwd } from "./commands/nwd.js";
+import { sysInfo } from "./commands/sysInfo.js";
 import { errors } from "./errors.js";
 
 let __currentPath = os.homedir();
@@ -28,6 +29,10 @@ const executeCommand = {
   async cat(args) {
     await files.cat(__currentPath, args);
   },
+  os(args) {
+    sysInfo(args);
+  },
+
   exit() {
     process.exit(0);
   },
@@ -43,10 +48,10 @@ export const startApp = async () => {
       try {
         await executeCommand[command](args);
       } catch {
-        errors.operationFailed();
+        console.log(errors.operationFailed);
       }
     } else {
-      errors.invalidInput();
+      console.log(errors.invalidInput);
     }
     // switch (command) {
     //   case "up":
