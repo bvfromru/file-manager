@@ -4,11 +4,11 @@ import path from "node:path";
 
 export const files = {
   async cat(currentPath, args) {
-    const pathToFile = args[0];
-    const filename = path.resolve(currentPath, pathToFile);
+    const filename = args[0];
+    const pathToFile = path.resolve(currentPath, filename);
     try {
-      await fs.access(filename);
-      const rdStream = createReadStream(filename, "utf-8");
+      await fs.access(pathToFile);
+      const rdStream = createReadStream(pathToFile, "utf-8");
       rdStream.pipe(process.stdout);
       const end = new Promise((resolve, reject) => {
         rdStream.on("end", () => resolve());

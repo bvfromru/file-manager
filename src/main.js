@@ -2,6 +2,7 @@ import { stdin as input, stdout as output } from "node:process";
 import { createInterface } from "node:readline/promises";
 import os from "os";
 import { files } from "./commands/files.js";
+import { hash } from "./commands/hash.js";
 import { nwd } from "./commands/nwd.js";
 import { sysInfo } from "./commands/sysInfo.js";
 import { errors } from "./errors.js";
@@ -32,8 +33,13 @@ const executeCommand = {
   os(args) {
     sysInfo(args);
   },
-
+  async hash(args) {
+    await hash(__currentPath, args);
+  },
   exit() {
+    process.exit(0);
+  },
+  [".exit"]() {
     process.exit(0);
   },
 };
