@@ -1,8 +1,7 @@
-import os from "node:os";
-import { messages } from "../messages.js";
+import os from "os";
+import { MESSAGES } from "../messages.js";
 
-export const sysInfo = (args) => {
-  const parameter = args[0];
+export const sysInfo = (parameter) => {
   switch (parameter) {
     case "--eol":
     case "--EOL":
@@ -11,7 +10,7 @@ export const sysInfo = (args) => {
     case "--cpus":
       const cpus = os.cpus();
       let result = [];
-      cpus.forEach((cpu) => result.push({ Model: cpu.model.trim(), Rate: `${cpu.speed} GHz` }));
+      cpus.forEach((cpu) => result.push({ Model: cpu.model.trim(), Rate: `${cpu.speed / 1000} GHz` }));
       console.log("Overall amount of CPUS:", cpus.length);
       console.table(result);
       break;
@@ -25,6 +24,6 @@ export const sysInfo = (args) => {
       console.log("This processor architecture is:", process.arch);
       break;
     default:
-      console.log(messages.invalidInput);
+      console.log(MESSAGES.invalidInput);
   }
 };

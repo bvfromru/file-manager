@@ -1,17 +1,16 @@
-import fs from "node:fs/promises";
-import path from "node:path";
+import fs from "fs/promises";
+import { isExist, resolvePath } from "../helpers.js";
 
 export const nwd = {
   up(changeCurrentPath, currentPath) {
-    const resPath = path.resolve(currentPath, "..");
+    const resPath = resolvePath(currentPath, "..");
     changeCurrentPath(resPath);
   },
 
-  async cd(changeCurrentPath, currentPath, args) {
-    const destPath = args[0];
-    const resPath = path.resolve(currentPath, destPath);
+  async cd(changeCurrentPath, currentPath, destPath) {
+    const resPath = resolvePath(currentPath, destPath);
     try {
-      await fs.access(resPath);
+      await isExist(resPath);
       changeCurrentPath(resPath);
     } catch (err) {
       throw err;

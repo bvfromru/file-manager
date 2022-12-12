@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js -- --username=GreatDeveloper",
-    "error": "node src/index.js -- ",
+    "start": "node src/index.js",
+    "name": "node src/index.js -- --username=GreatDeveloper",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

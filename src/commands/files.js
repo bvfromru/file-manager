@@ -1,14 +1,13 @@
-import { createReadStream, createWriteStream } from "node:fs";
-import fs from "node:fs/promises";
-import path from "node:path";
-import { messages } from "../messages.js";
+import { createReadStream, createWriteStream } from "fs";
+import fs from "fs/promises";
+import { isExist, resolvePath } from "../helpers.js";
+import { MESSAGES } from "../messages.js";
 
 export const files = {
-  async cat(currentPath, args) {
-    const filename = args[0];
-    const pathToFile = path.resolve(currentPath, filename);
+  async cat(currentPath, filename) {
+    const pathToFile = resolvePath(currentPath, filename);
     try {
-      await fs.access(pathToFile);
+      await isExist(pathToFile);
       const readable = createReadStream(pathToFile, "utf-8");
       readable.pipe(process.stdout);
       const end = new Promise((resolve, reject) => {
@@ -17,38 +16,40 @@ export const files = {
       });
       await end;
     } catch (err) {
+      console.log(err);
       throw err;
     }
   },
 
   async add(currentPath, filename) {
-    const pathToFile = path.resolve(currentPath, filename);
+    const pathToFile = resolvePath(currentPath, filename);
     try {
       await fs.writeFile(pathToFile, "", { flag: "wx" });
-      console.log(messages.operationSuccessful);
+      console.log(MESSAGES.operationSuccessful);
     } catch (err) {
       throw err;
     }
   },
 
   async rn(currentPath, oldFilePath, newFileName) {
-    const pathToOldFile = path.resolve(currentPath, oldFilePath);
-    const pathToNewFile = path.resolve(currentPath, newFileName);
+    const pathToOldFile = resolvePath(currentPath, oldFilePath);
+    const pathToNewFile = resolvePath(currentPath, newFileName);
     try {
       // await fs.access(pathToOldFile);
       // TODO check if newFile is already exist
       await fs.rename(pathToOldFile, pathToNewFile);
-      console.log(messages.operationSuccessful);
+      console.log(MESSAGES.operationSuccessful);
     } catch (err) {
       throw err;
     }
   },
 
   async cp(currentPath, oldFilePath, newFilePath) {
-    const pathToOldFile = path.resolve(currentPath, oldFilePath);
-    const pathToNewFile = path.resolve(currentPath, newFilePath);
+    const pathToOldFile = resolvePath(currentPath, oldFilePath);
+    const pathToNewFile = resolvePath(currentPath, newFilePath);
     try {
       // TODO check if newFile is already exist
+      // TODO newFilePath should be directory
       const readable = createReadStream(pathToOldFile);
       const writable = createWriteStream(pathToNewFile);
       readable.pipe(writable);
@@ -57,17 +58,17 @@ export const files = {
         readable.on("error", () => reject());
       });
       await end;
-      console.log(messages.operationSuccessful);
+      console.log(MESSAGES.operationSuccessful);
     } catch (err) {
       throw err;
     }
   },
 
   async rm(currentPath, filePath) {
-    const pathToFile = path.resolve(currentPath, filePath);
+    const pathToFile = resolvePath(currentPath, filePath);
     try {
       await fs.rm(pathToFile);
-      console.log(messages.operationSuccessful);
+      console.log(MESSAGES.operationSuccessful);
     } catch (err) {
       throw err;
     }
