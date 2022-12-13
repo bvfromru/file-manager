@@ -1,82 +1,59 @@
 import { createReadStream, createWriteStream } from "fs";
 import fs from "fs/promises";
-import { isExist, resolvePath } from "../helpers.js";
+import { pipeline } from "stream/promises";
+import { checkThatExist, checkThatNotExist } from "../helpers.js";
 import { MESSAGES } from "../messages.js";
 
 export const files = {
-  async cat(currentPath, filename) {
-    const pathToFile = resolvePath(currentPath, filename);
-    try {
-      await isExist(pathToFile);
-      const readable = createReadStream(pathToFile, "utf-8");
-      readable.pipe(process.stdout);
-      const end = new Promise((resolve, reject) => {
-        readable.on("end", () => resolve());
-        readable.on("error", () => reject());
-      });
-      await end;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
+  async _copyFile(pathToOldFile, pathToNewFile) {
+    await checkThatExist(pathToNewFile);
+    const readable = createReadStream(pathToOldFile);
+    const writable = createWriteStream(pathToNewFile);
+    await pipeline(readable, writable);
   },
 
-  async add(currentPath, filename) {
-    const pathToFile = resolvePath(currentPath, filename);
-    try {
-      await fs.writeFile(pathToFile, "", { flag: "wx" });
-      console.log(MESSAGES.operationSuccessful);
-    } catch (err) {
-      throw err;
-    }
+  async _removeFile(pathToFile) {
+    await fs.rm(pathToFile);
   },
 
-  async rn(currentPath, oldFilePath, newFileName) {
-    const pathToOldFile = resolvePath(currentPath, oldFilePath);
-    const pathToNewFile = resolvePath(currentPath, newFileName);
-    try {
-      // await fs.access(pathToOldFile);
-      // TODO check if newFile is already exist
-      await fs.rename(pathToOldFile, pathToNewFile);
-      console.log(MESSAGES.operationSuccessful);
-    } catch (err) {
-      throw err;
-    }
+  async cat(pathToFile) {
+    await checkThatExist(pathToFile);
+    const readable = createReadStream(pathToFile, "utf-8");
+    readable.pipe(process.stdout);
+    const end = new Promise((resolve, reject) => {
+      readable.on("end", () => resolve());
+      readable.on("error", () => reject());
+    });
+    await end;
   },
 
-  async cp(currentPath, oldFilePath, newFilePath) {
-    const pathToOldFile = resolvePath(currentPath, oldFilePath);
-    const pathToNewFile = resolvePath(currentPath, newFilePath);
-    try {
-      // TODO check if newFile is already exist
-      // TODO newFilePath should be directory
-      const readable = createReadStream(pathToOldFile);
-      const writable = createWriteStream(pathToNewFile);
-      readable.pipe(writable);
-      const end = new Promise((resolve, reject) => {
-        readable.on("end", () => resolve());
-        readable.on("error", () => reject());
-      });
-      await end;
-      console.log(MESSAGES.operationSuccessful);
-    } catch (err) {
-      throw err;
-    }
+  async add(newFileName) {
+    await fs.writeFile(newFileName, "", { flag: "wx" });
+    console.log(MESSAGES.operationSuccessful);
   },
 
-  async rm(currentPath, filePath) {
-    const pathToFile = resolvePath(currentPath, filePath);
-    try {
-      await fs.rm(pathToFile);
-      console.log(MESSAGES.operationSuccessful);
-    } catch (err) {
-      throw err;
-    }
+  async rn(pathToFile, newPathToFile) {
+    await checkThatNotExist(newPathToFile);
+    await fs.rename(pathToFile, newPathToFile);
+    console.log(MESSAGES.operationSuccessful);
   },
 
-  async mv(currentPath, oldFilePath, newFilePath) {
-    await this.cp(currentPath, oldFilePath, newFilePath);
-    await this.rm(currentPath, oldFilePath);
-    // TODO checks and remove double clg;
+  async cp(pathToOldFile, pathToNewFile) {
+    await checkThatNotExist(pathToNewFile);
+    const readable = createReadStream(pathToOldFile);
+    const writable = createWriteStream(pathToNewFile);
+    await pipeline(readable, writable);
+    console.log(MESSAGES.operationSuccessful);
+  },
+
+  async rm(pathToFile) {
+    await this._removeFile(pathToFile);
+    console.log(MESSAGES.operationSuccessful);
+  },
+
+  async mv(pathToOldFile, pathToNewFile) {
+    await this._copyFile(pathToOldFile, pathToNewFile);
+    await this._removeFile(pathToOldFile);
+    console.log(MESSAGES.operationSuccessful);
   },
 };
