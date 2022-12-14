@@ -1,4 +1,5 @@
-import { app } from "./app.js";
+import os from "os";
+import { App } from "./app.js";
 
 const greeting = (username) => {
   console.log(`Welcome to the File Manager, ${username}!`);
@@ -18,4 +19,5 @@ if (lastArg && lastArg.includes("--username=")) {
 
 greeting(username);
 process.on("exit", () => goodbye(username));
+const app = new App(os.homedir());
 await app.start();

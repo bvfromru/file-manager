@@ -1,8 +1,14 @@
 import { createHash } from "crypto";
-import { checkThatExist } from "../helpers.js";
+import { createReadStream } from "fs";
 
 export const hash = async (pathToFile) => {
-  await checkThatExist(pathToFile);
-  const hash = createHash("sha256").update(pathToFile).digest("hex");
-  console.log(`Hash of ${pathToFile} is: ${hash}`);
+  const hash = createHash("sha256");
+  const readable = createReadStream(pathToFile);
+  readable.pipe(hash);
+  const end = new Promise((resolve, reject) => {
+    readable.on("end", () => resolve());
+    readable.on("error", () => reject());
+  });
+  await end;
+  console.log(`Hash of ${pathToFile} is: ${hash.digest("hex")}`);
 };

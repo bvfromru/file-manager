@@ -16,7 +16,7 @@ export const parseInput = (input) => {
 
 const isExist = async (path) => {
   try {
-    await access(path);
+    await fs.access(path);
     return true;
   } catch (error) {
     return false;
