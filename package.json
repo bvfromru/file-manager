@@ -1,0 +1,23 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "Your task is to implement File Manager using Node.js APIs.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "name": "node src/index.js -- --username=GreatDeveloper",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bvfromru/file-manager.git"
+  },
+  "keywords": [],
+  "author": "Vitalii Boudkin <bvfromru@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bvfromru/file-manager/issues"
+  },
+  "homepage": "https://github.com/bvfromru/file-manager#readme"
+}
